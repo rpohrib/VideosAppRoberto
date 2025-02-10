@@ -31,4 +31,9 @@ class VideosController extends Controller
         $videos = Video::where('tested_by', $userId)->get();
         return response()->json($videos);
     }
+
+    public function index()
+    {
+        return view('videos.manage'); // O el que necessitis retornar
+    }
 }

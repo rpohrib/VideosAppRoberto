@@ -10,10 +10,30 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens;
+    use HasApiTokens, Notifiable, HasRoles;
+
+    /**
+     * Get the videos tested by the user.
+     */
+    public function testedBy()
+    {
+        return $this->hasMany(Video::class, 'tested_by');
+    }
+
+    /**
+     * Check if the user is a super admin.
+     */
+    public function isSuperAdmin()
+    {
+        return $this->super_admin;
+    }
+
+
+
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;

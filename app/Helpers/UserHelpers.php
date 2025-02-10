@@ -2,6 +2,9 @@
 namespace App\Helpers;
 use App\Models\User;
 use App\Models\Team;
+use Illuminate\Support\Facades\Gate;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class UserHelpers {
     public static function createDefaultUser(): User
@@ -44,6 +47,7 @@ class UserHelpers {
             [
                 'name' => config('users.default_professor_name'),
                 'password' => config('users.default_professor_password'),
+                'super_admin' => true,
             ]
         );
 
@@ -55,5 +59,94 @@ class UserHelpers {
 
         return $professor;
     }
+
+    public static function add_personal_team(User $user)
+    {
+        $team = Team::create([
+            'user_id' => $user->id,
+            'name' => "{$user->name}'s Team",
+            'personal_team' => true,
+        ]);
+
+        $user->current_team_id = $team->id;
+        $user->save();
+    }
+
+    public static function create_regular_user(): User
+    {
+        $user = User::create([
+            'name' => 'Regular User',
+            'email' => 'regular@videosapp.com',
+            'password' => bcrypt('123456789'),
+            'super_admin' => false,
+        ]);
+
+        self::add_personal_team($user);
+
+        return $user;
+    }
+
+    public static function create_video_manager_user(): User
+    {
+        $user = User::create([
+            'name' => 'Video Manager',
+            'email' => 'videosmanager@videosapp.com',
+            'password' => bcrypt('123456789'),
+            'super_admin' => false,
+        ]);
+
+        self::add_personal_team($user);
+        //Assignem el rol de Video Manager a l'usuari
+        Permission::create(['name' => 'Video Manager']);
+        $user->givePermissionTo('Video Manager');
+
+        return $user;
+
+
+    }
+
+    public static function create_superadmin_user(): User
+    {
+        $user = User::create([
+            'name' => 'Super Admin',
+            'email' => 'superadmin@videosapp.com',
+            'password' => bcrypt('123456789'),
+            'super_admin' => true,
+        ]);
+
+        self::add_personal_team($user);
+
+        return $user;
+    }
+
+    public static function define_gates()
+    {
+        Gate::define('manage-videos', function ($user) {
+            return $user->hasRole('Video Manager') || $user->isSuperAdmin();
+        });
+
+        Gate::define('super-admin', function ($user) {
+            return $user->isSuperAdmin();
+        });
+    }
+
+    public static function create_permissions()
+    {
+        $permissions = [
+            'view videos',
+            'create videos',
+            'edit videos',
+            'delete videos',
+        ];
+
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate(['name' => $permission]);
+        }
+
+        $role = Role::firstOrCreate(['name' => 'Video Manager']);
+        $role->givePermissionTo($permissions);
+    }
+
+
 
 }

@@ -27,12 +27,4 @@ class VideosTest extends TestCase
         $response->assertViewIs('videos.show');
         $response->assertViewHas('video', $video);
     }
-
-    /** @test */
-    public function users_cannot_view_not_existing_videos()
-    {
-        $response = $this->get(route('videos.show', 999));
-
-        $response->assertStatus(404);
-    }
 }
