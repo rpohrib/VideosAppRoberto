@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            UsersTableSeeder::class,
+//            UsersTableSeeder::class,
             VideosTableSeeder::class,
         ]);
 
@@ -23,6 +23,8 @@ class DatabaseSeeder extends Seeder
         UserHelpers::create_permissions();
 
         // Crear usuaris per defecte
+        UserHelpers::createDefaultUser();
+        UserHelpers::createDefaultProfessor();
         UserHelpers::create_superadmin_user();
         UserHelpers::create_regular_user();
         UserHelpers::create_video_manager_user();

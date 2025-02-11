@@ -9,11 +9,6 @@ use Spatie\Permission\Models\Role;
 class UserHelpers {
     public static function createDefaultUser(): User
     {
-        // Crear o obtenir l'equip per defecte
-        $team = Team::firstOrCreate(
-            ['name' => config('users.default_team_name')],
-            ['user_id' => null] // Opcional, només si 'user_id' és nullable
-        );
 
         // Crear o obtenir l'usuari per defecte
         $user = User::firstOrCreate(
@@ -22,6 +17,12 @@ class UserHelpers {
                 'name' => config('users.default_user_name'),
                 'password' => config('users.default_user_password'),
             ]
+        );
+
+        // Crear o obtenir l'equip per defecte
+        $team = Team::firstOrCreate(
+            ['name' => config('users.default_user_team_name')],
+            ['user_id' => $user->id] // Opcional, només si 'user_id' és nullable
         );
 
         // Assegurar-nos que 'team_id' es guarda correctament
@@ -35,11 +36,6 @@ class UserHelpers {
 
     public static function createDefaultProfessor(): User
     {
-        // Crear o obtenir l'equip per defecte
-        $team = Team::firstOrCreate(
-            ['name' => config('users.default_team_name')],
-            ['user_id' => null] // Opcional, només si 'user_id' és nullable
-        );
 
         // Crear o obtenir el professor per defecte
         $professor = User::firstOrCreate(
@@ -49,6 +45,12 @@ class UserHelpers {
                 'password' => config('users.default_professor_password'),
                 'super_admin' => true,
             ]
+        );
+
+        // Crear o obtenir l'equip per defecte
+        $team = Team::firstOrCreate(
+            ['name' => config('users.default_professor_team_name')],
+            ['user_id' => $professor->id] // Opcional, només si 'user_id' és nullable
         );
 
         // Assegurar-nos que 'team_id' es guarda correctament
@@ -96,13 +98,12 @@ class UserHelpers {
         ]);
 
         self::add_personal_team($user);
-        //Assignem el rol de Video Manager a l'usuari
-        Permission::create(['name' => 'Video Manager']);
-        $user->givePermissionTo('Video Manager');
+
+        // Crear o obtenir el rol de Video Manager
+        $role = Role::firstOrCreate(['name' => 'Video Manager']);
+        $user->assignRole($role);  // Assignar el rol a l'usuari
 
         return $user;
-
-
     }
 
     public static function create_superadmin_user(): User

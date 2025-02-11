@@ -2,8 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VideosController;
+use App\Http\Controllers\VideosManageController;
 
 Route::get('/videos/{id}', [VideosController::class, 'show'])->name('videos.show');
+//Route::get('/prova2', [VideosManageController::class, 'index'])->name('videos.index');
+Route::get('/videos/manage', [VideosManageController::class, 'index'])->name('videos.index');
 
 Route::get('/', function () {
     return view('welcome');
@@ -18,6 +21,8 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 
-    Route::get('/videos/manage', [VideosController::class, 'index'])->name('videos.manage');
-    //Route::get('/videos/manage', [VideosController::class, 'index'])->name('videos.manage')->middleware('can:manage-videos');
+
+
+   // Route::middleware(['auth', 'role:Video Manager'])->get('/videos/manage', [VideosManageController::class, 'index']);
+
 });

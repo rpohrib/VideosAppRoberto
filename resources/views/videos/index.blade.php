@@ -1,5 +1,5 @@
 <!-- resources/views/videos/manage.blade.php -->
-@extends('layouts.app')
+@extends('layouts.videos-app')
 
 @section('content')
     <h1>Manage Videos</h1>

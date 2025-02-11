@@ -32,8 +32,4 @@ class VideosController extends Controller
         return response()->json($videos);
     }
 
-    public function index()
-    {
-        return view('videos.manage'); // O el que necessitis retornar
-    }
 }
