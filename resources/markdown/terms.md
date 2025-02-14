@@ -12,3 +12,6 @@ En aquest cas al 1r sprint hem tingut que fer la part de backend sobre els usuar
 
 ### Explicació 2n Sprint
 En el 2n Sprint ens hem enfocat mes en la part dels videos, en aquest cas hem creat tot, comensant per backend, després hem creat tot el tema sobre les vistes i rutes i després els testos. En tot aixo tindriem tot el apartat sobre els videos i la pàgina en si.
+
+### Explicació 3r Sprint
+En el 3r Sprint ens hem enfocat en una nova pagina de la ruta /videos/manage, en aquest apartat hem creat els usuaris per pugue accedir a la pàgina nova gracies als permisos donats amb "spaties/laravel-permisions". També hem tingut que fica depenen quin usuari estas pots accedir o no a la pàgian desitjada.

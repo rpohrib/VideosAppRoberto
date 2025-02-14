@@ -34,8 +34,8 @@ class HelperTest extends TestCase
         ]);
 
         // Comprovar que estan associats al mateix equip
-        $team = Team::where('name', config('users.default_team_name'))->first();
-        $this->assertNotNull($team);
+        $team = Team::where('name', config('users.default_user_team_name'))->first();
+        $this->assertNotNull($team, 'Team not found');
 
         // Comprovar que els usuaris tenen el mateix team_id
         $this->assertEquals($team->id, $defaultUser->current_team_id);

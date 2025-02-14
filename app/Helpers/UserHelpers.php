@@ -94,7 +94,7 @@ class UserHelpers {
             'name' => 'Video Manager',
             'email' => 'videosmanager@videosapp.com',
             'password' => bcrypt('123456789'),
-            'super_admin' => false,
+            'super_admin' => true,
         ]);
 
         self::add_personal_team($user);
@@ -102,7 +102,8 @@ class UserHelpers {
         // Crear o obtenir el rol de Video Manager
         $role = Role::firstOrCreate(['name' => 'Video Manager']);
         $user->assignRole($role);  // Assignar el rol a l'usuari
-
+        $user->givePermissionTo('manage-videos');  // Assignar permisos a l'usuari
+        $user->save();
         return $user;
     }
 
@@ -134,6 +135,7 @@ class UserHelpers {
     public static function create_permissions()
     {
         $permissions = [
+            'manage-videos',
             'view videos',
             'create videos',
             'edit videos',

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Video;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 
 class VideosController extends Controller
@@ -10,8 +13,8 @@ class VideosController extends Controller
     /**
      * Display the specified video.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return Factory|View|Application
      */
     public function show($id)
     {
@@ -24,7 +27,7 @@ class VideosController extends Controller
      * Display a listing of videos tested by a specific user.
      *
      * @param  int  $userId
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function testedBy($userId)
     {

@@ -6,5 +6,9 @@ parameters:
     paths:
         - app
         - tests
+        - database
+        - config
+        - routes
+        - resources
     ignoreErrors:
         - '#Unsafe usage of new static#'
