@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Videos;
 
+use App\Helpers\UserHelpers;
 use App\Models\Video;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -26,5 +27,38 @@ class VideosTest extends TestCase
         $response->assertStatus(200);
         $response->assertViewIs('videos.show');
         $response->assertViewHas('video', $video);
+    }
+
+    /** @test */
+    public function user_without_permissions_can_see_default_videos_page()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $response = $this->get(route('videos.index'));
+
+        $response->assertStatus(200);
+        $response->assertViewIs('videos.index');
+    }
+
+    /** @test */
+    public function user_with_permissions_can_see_default_videos_page()
+    {
+        $user = UserHelpers::create_video_manager_user();
+        $this->actingAs($user);
+
+        $response = $this->get(route('videos.index'));
+
+        $response->assertStatus(200);
+        $response->assertViewIs('videos.index');
+    }
+
+    /** @test */
+    public function not_logged_users_can_see_default_videos_page()
+    {
+        $response = $this->get(route('videos.index'));
+
+        $response->assertStatus(200);
+        $response->assertViewIs('videos.index');
     }
 }

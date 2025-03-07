@@ -15,3 +15,6 @@ En el 2n Sprint ens hem enfocat mes en la part dels videos, en aquest cas hem cr
 
 ### Explicació 3r Sprint
 En el 3r Sprint ens hem enfocat en una nova pagina de la ruta /videos/manage, en aquest apartat hem creat els usuaris per pugue accedir a la pàgina nova gracies als permisos donats amb "spaties/laravel-permisions". També hem tingut que fica depenen quin usuari estas pots accedir o no a la pàgian desitjada.
+
+### Explicació 4t Sprint
+En el 4t Sprint hem creat el CRUD per als videos, hem creat la part de backend, frontend i els testos. Tambe hem creat la part de crear, editar, eliminar i veure els videos. 

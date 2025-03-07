@@ -19,7 +19,7 @@ return new class extends Migration
             $table->timestamp('published_at')->nullable();
             $table->unsignedBigInteger('previous')->nullable();
             $table->unsignedBigInteger('next')->nullable();
-            $table->unsignedBigInteger('series_id');
+            $table->unsignedBigInteger('series_id')->nullable();
             $table->timestamps();
 
             $table->foreign('previous')->references('id')->on('videos')->onDelete('set null');

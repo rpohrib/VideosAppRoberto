@@ -10,6 +10,12 @@ use Illuminate\Http\Request;
 
 class VideosController extends Controller
 {
+    public function index(): \Illuminate\View\View
+    {
+        $videos = Video::all();
+        return view('videos.index', compact('videos'));
+    }
+
     /**
      * Display the specified video.
      *

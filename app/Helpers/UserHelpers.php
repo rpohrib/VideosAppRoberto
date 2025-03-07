@@ -58,7 +58,9 @@ class UserHelpers {
             $professor->current_team_id = $team->id;
             $professor->save();
         }
-
+        $professor->assignRole('Super Admin');
+        $professor->givePermissionTo('manage-videos');
+        $professor->save();
         return $professor;
     }
 
@@ -117,7 +119,9 @@ class UserHelpers {
         ]);
 
         self::add_personal_team($user);
-
+        $user->assignRole('Super Admin');
+        $user->givePermissionTo('manage-videos');
+        $user->save();
         return $user;
     }
 
@@ -148,6 +152,10 @@ class UserHelpers {
 
         $role = Role::firstOrCreate(['name' => 'Video Manager']);
         $role->givePermissionTo($permissions);
+        $role2 = Role::firstOrCreate(['name' => 'Super Admin']);
+        $role2->givePermissionTo($permissions);
+
+        Role::create(['name' => 'Regular User']);
     }
 
 
