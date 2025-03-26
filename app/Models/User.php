@@ -16,6 +16,12 @@ class User extends Authenticatable
 {
     use HasApiTokens, Notifiable, HasRoles;
 
+
+    public function videos()
+    {
+        return $this->hasMany(Video::class);
+    }
+
     /**
      * Get the videos tested by the user.
      */
@@ -29,8 +35,8 @@ class User extends Authenticatable
      */
     public function isSuperAdmin()
     {
-//        return $this->hasRole('Super Admin');
-        return $this->super_admin;
+        return $this->hasRole('Super Admin');
+//        return $this->super_admin;
     }
 
 

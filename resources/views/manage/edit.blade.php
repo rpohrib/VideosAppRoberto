@@ -38,8 +38,8 @@
                     <td>{{ $video->description }}</td>
                     <td><a href="{{ $video->url }}" target="_blank">View</a></td>
                     <td>
-                        <a href="{{ route('videos.edit', $video) }}">Edit</a>
-                        <form action="{{ route('videos.destroy', $video) }}" method="POST" style="display:inline;">
+                        <a href="{{ route('manage.edit', $video) }}">Edit</a>
+                        <form action="{{ route('manage.destroy', $video) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
                             <button type="submit">Delete</button>

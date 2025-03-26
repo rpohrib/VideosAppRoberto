@@ -60,6 +60,7 @@ class UserHelpers {
         }
         $professor->assignRole('Super Admin');
         $professor->givePermissionTo('manage-videos');
+        $professor->givePermissionTo('manage-users');
         $professor->save();
         return $professor;
     }
@@ -121,6 +122,7 @@ class UserHelpers {
         self::add_personal_team($user);
         $user->assignRole('Super Admin');
         $user->givePermissionTo('manage-videos');
+        $user->givePermissionTo('manage-users');
         $user->save();
         return $user;
     }
@@ -129,6 +131,10 @@ class UserHelpers {
     {
         Gate::define('manage-videos', function ($user) {
             return $user->hasRole('Video Manager') || $user->isSuperAdmin();
+        });
+
+        Gate::define('manage-users', function ($user) {
+            return $user->hasRole('Users Manager') || $user->isSuperAdmin();
         });
 
         Gate::define('super-admin', function ($user) {
@@ -140,6 +146,7 @@ class UserHelpers {
     {
         $permissions = [
             'manage-videos',
+            'manage-users',
             'view videos',
             'create videos',
             'edit videos',
@@ -154,8 +161,12 @@ class UserHelpers {
         $role->givePermissionTo($permissions);
         $role2 = Role::firstOrCreate(['name' => 'Super Admin']);
         $role2->givePermissionTo($permissions);
+        $role3 = Role::firstOrCreate(['name' => 'User Manager']);
+        $role3->givePermissionTo($permissions);
 
-        Role::create(['name' => 'Regular User']);
+        if (!Role::where('name', 'Regular User')->exists()) {
+            Role::create(['name' => 'Regular User']);
+        }
     }
 
 

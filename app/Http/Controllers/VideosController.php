@@ -41,4 +41,23 @@ class VideosController extends Controller
         return response()->json($videos);
     }
 
+    public function store(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'url' => 'required|url',
+            'user_id' => 'required|integer|exists:users,id',
+        ]);
+
+        $video = Video::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'url' => $request->url,
+            'user_id' => auth()->id(),
+        ]);
+
+        return response()->json($video, 201);
+    }
+
 }

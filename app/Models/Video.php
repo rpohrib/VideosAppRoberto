@@ -8,8 +8,12 @@ use Carbon\Carbon;
 class Video extends Model
 {
     protected $fillable = [
-        'title', 'description', 'url', 'published_at', 'previous', 'next', 'series_id'
+        'title', 'description', 'url', 'published_at', 'previous', 'next', 'series_id', 'user_id'
     ];
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 
     protected $dates = ['published_at'];
 

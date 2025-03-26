@@ -23,4 +23,62 @@ class UserTest extends TestCase
 
     }
 
+
+    /** @test */
+    public function user_without_permissions_can_see_default_users_page()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user)
+            ->get(route('users.index'))
+            ->assertStatus(200);
+    }
+
+    /** @test */
+    public function user_with_permissions_can_see_default_users_page()
+    {
+        $user = User::factory()->create();
+        $role = Role::create(['name' => 'User Manager']);
+        $user->assignRole($role);
+
+        $this->actingAs($user)
+            ->get(route('users.index'))
+            ->assertStatus(200);
+    }
+
+    /** @test */
+    public function not_logged_users_cannot_see_default_users_page()
+    {
+        $this->get(route('users.index'))
+            ->assertRedirect(route('login'));
+    }
+
+    /** @test */
+    public function user_without_permissions_can_see_user_show_page()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user)
+            ->get(route('users.show', $user->id))
+            ->assertStatus(200);
+    }
+
+    /** @test */
+    public function user_with_permissions_can_see_user_show_page()
+    {
+        $user = User::factory()->create();
+        $role = Role::create(['name' => 'User Manager']);
+        $user->assignRole($role);
+
+        $this->actingAs($user)
+            ->get(route('users.show', $user->id))
+            ->assertStatus(200);
+    }
+
+    /** @test */
+    public function not_logged_users_cannot_see_user_show_page()
+    {
+        $user = User::factory()->create();
+        $this->get(route('users.show', $user->id))
+            ->assertRedirect(route('login'));
+    }
+
 }

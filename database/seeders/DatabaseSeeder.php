@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Helpers\UserHelpers;
+use App\Helpers\VIdeosHelpers;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -16,8 +17,10 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
 //            UsersTableSeeder::class,
-            VideosTableSeeder::class,
+            //VideosTableSeeder::class,
         ]);
+
+        VIdeosHelpers::getDefaultVideo();
 
         // Crear permisos
         UserHelpers::create_permissions();

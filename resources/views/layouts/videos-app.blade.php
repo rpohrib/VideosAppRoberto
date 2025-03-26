@@ -12,10 +12,15 @@
     <nav>
         <ul>
             <li><a href="{{ route('videos.index') }}">Home</a></li>
+            <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
+            <li><a>-------------------------------------------</a></li>
             @auth
                 <li><a href="{{ route('manage.index') }}">Manage Videos</a></li>
                 <li><a href="{{ route('manage.create') }}">Add Video</a></li>
-                <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                <li><a>-------------------------------------------</a></li>
+                <li><a href="{{ route('users.index') }}">All Users</a></li>
+                <li><a href="{{ route('users.manage.index') }}">Manage Users</a></li>
+                <li><a>-------------------------------------------</a></li>
                 <li>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf

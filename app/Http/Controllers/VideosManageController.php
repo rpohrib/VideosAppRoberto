@@ -11,12 +11,12 @@ class VideosManageController extends Controller
 {
     public function index(): View
     {
-        if (auth()->user()->can('manage-videos')) {
+//        if (auth()->user()->can('manage-videos')) {
             $videos = Video::all();
             return view('manage.index', compact('videos'));
-        } else {
-            return abort(403);
-        }
+//        } else {
+//            return abort(403);
+//        }
     }
 
     /**
@@ -38,6 +38,8 @@ class VideosManageController extends Controller
             'url' => 'required|url',
         ]);
 
+        $validated['user_id'] = auth()->id();
+
         Video::create($validated);
 
         return redirect()->route('manage.index')->with('success', 'Video created successfully.');
@@ -54,10 +56,12 @@ class VideosManageController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Video $video): View
+    public function edit($id)
     {
+        $video = Video::findOrFail($id);
+        $videos = Video::all(); // Fetch all videos or apply necessary filtering
 
-        return view('manage.edit', compact('video'));
+        return view('manage.edit', compact('video', 'videos'));
     }
 
     /**
