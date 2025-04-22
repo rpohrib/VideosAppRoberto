@@ -11,6 +11,14 @@ class Video extends Model
         'title', 'description', 'url', 'published_at', 'previous', 'next', 'series_id', 'user_id'
     ];
 
+    /**
+     * Relationship: Video belongs to a Series (1:N).
+     */
+    public function series()
+    {
+        return $this->belongsTo(Series::class);
+    }
+
     public function user(){
         return $this->belongsTo(User::class);
     }

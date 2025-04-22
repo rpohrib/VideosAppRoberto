@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SeriesManageController;
 use App\Http\Controllers\usersController;
 use App\Http\Controllers\usersManageController;
 use App\Http\Controllers\VideosController;
@@ -11,6 +12,7 @@ Route::get('/videos/{id}', [VideosController::class, 'show'])->name('videos.show
 //Route::get('/videos/manage', [VideosManageController::class, 'index'])->name('videos.index');
 
 
+Route::resource('videos', VideosController::class)->middleware('auth');
 
 // Route for the index page, accessible to everyone
 Route::get('/videos', [VideosController::class, 'index'])->name('videos.index');
@@ -19,6 +21,7 @@ Route::get('/videos', [VideosController::class, 'index'])->name('videos.index');
 //Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified', 'role:Video Manager'])->group(function () {
     Route::get('/videosmanage', [VideosManageController::class, 'index'])->name('manage.index');
     Route::get('/videos/manage/create', [VideosManageController::class, 'create'])->name('manage.create');
+    Route::get('/videoscreate', [VideosManageController::class, 'createFromUsers'])->name('videos.create');
     Route::post('/videos/manage', [VideosManageController::class, 'store'])->name('manage.store');
     Route::get('/videos/manage/{video}/edit', [VideosManageController::class, 'edit'])->name('manage.edit');
     Route::put('/videos/manage/{video}', [VideosManageController::class, 'update'])->name('manage.update');
@@ -40,6 +43,23 @@ Route::get('/videos', [VideosController::class, 'index'])->name('videos.index');
         Route::get('/users', [UsersController::class, 'index'])->name('users.index');
         Route::get('/users/{user}', [UsersController::class, 'show'])->name('users.show');
     });
+
+
+Route::middleware(['auth'])->prefix('series/manage')->name('series.manage.')->group(function () {
+    Route::get('/', [SeriesManageController::class, 'index'])->name('index'); // Manage index
+    Route::get('/create', [SeriesManageController::class, 'create'])->name('create'); // Create form
+    Route::post('/', [SeriesManageController::class, 'store'])->name('store'); // Store series
+    Route::get('/{series}/edit', [SeriesManageController::class, 'edit'])->name('edit'); // Edit form
+    Route::put('/{series}', [SeriesManageController::class, 'update'])->name('update'); // Update series
+    Route::delete('/{series}', [SeriesManageController::class, 'destroy'])->name('destroy'); // Delete series
+    Route::delete('/{series}/delete', [SeriesManageController::class, 'delete'])->name('delete');
+});
+
+// Public routes for index and show
+Route::middleware(['auth'])->group(function () {
+    Route::get('/series', [SeriesManageController::class, 'index'])->name('series.index'); // Public index
+    Route::get('/series/{id}', [SeriesManageController::class, 'show'])->name('series.show'); // Public show
+});
 
 Route::get('/', function () {
     return view('welcome');

@@ -21,6 +21,8 @@
                 <li><a href="{{ route('users.index') }}">All Users</a></li>
                 <li><a href="{{ route('users.manage.index') }}">Manage Users</a></li>
                 <li><a>-------------------------------------------</a></li>
+                <li><a href="{{ route('series.index') }}">All Series</a></li>
+                <li><a href="{{ route('series.manage.index') }}">Manage Series</a></li>
                 <li>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf

@@ -9,6 +9,12 @@ use Illuminate\View\View;
 
 class VideosManageController extends Controller
 {
+
+    public function createFromUsers(): View
+    {
+        return view('videos.create');
+    }
+
     public function index(): View
     {
 //        if (auth()->user()->can('manage-videos')) {

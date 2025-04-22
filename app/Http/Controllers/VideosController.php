@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class VideosController extends Controller
 {
-    public function index(): \Illuminate\View\View
+    public function index()
     {
         $videos = Video::all();
         return view('videos.index', compact('videos'));
@@ -29,16 +29,9 @@ class VideosController extends Controller
         return view('videos.show', compact('video'));
     }
 
-    /**
-     * Display a listing of videos tested by a specific user.
-     *
-     * @param  int  $userId
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function testedBy($userId)
+    public function create()
     {
-        $videos = Video::where('tested_by', $userId)->get();
-        return response()->json($videos);
+        return view('videos.create');
     }
 
     public function store(Request $request)
@@ -46,18 +39,39 @@ class VideosController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'url' => 'required|url',
-            'user_id' => 'required|integer|exists:users,id',
+            'url' => 'required|string|url',
         ]);
 
-        $video = Video::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'url' => $request->url,
-            'user_id' => auth()->id(),
+        Video::create([
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),
+            'url' => $request->input('url'),
         ]);
 
-        return response()->json($video, 201);
+        return redirect()->route('videos.index')->with('success', 'Video created successfully.');
     }
 
+    public function edit(Video $video)
+    {
+        return view('videos.edit', compact('video'));
+    }
+
+    public function update(Request $request, Video $video)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+        ]);
+
+        $video->update($request->all());
+
+        return redirect()->route('videos.index')->with('success', 'Video updated successfully.');
+    }
+
+    public function destroy(Video $video)
+    {
+        $video->delete();
+
+        return redirect()->route('videos.index')->with('success', 'Video deleted successfully.');
+    }
 }

@@ -34,6 +34,14 @@
     </style>
 
     <h1>All Videos</h1>
+    <a href="{{ route('videos.create') }}" class="btn btn-primary mb-3">Create Video</a>
+
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
     <div class="video-grid">
         @foreach($videos as $video)
             <div class="video-card">

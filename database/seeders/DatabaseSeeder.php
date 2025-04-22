@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Helpers\SeriesHelpers;
 use App\Helpers\UserHelpers;
 use App\Helpers\VIdeosHelpers;
 use App\Models\User;
@@ -31,5 +32,9 @@ class DatabaseSeeder extends Seeder
         UserHelpers::create_superadmin_user();
         UserHelpers::create_regular_user();
         UserHelpers::create_video_manager_user();
+
+        //Crear permisos series
+        SeriesHelpers::createSeriesPermissions();
+        SeriesHelpers::create_series();
     }
 }
