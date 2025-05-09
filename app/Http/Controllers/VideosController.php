@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\VideoCreated;
 use App\Models\Video;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -42,11 +43,14 @@ class VideosController extends Controller
             'url' => 'required|string|url',
         ]);
 
-        Video::create([
+        $video = Video::create([
             'title' => $request->input('title'),
             'description' => $request->input('description'),
             'url' => $request->input('url'),
         ]);
+
+        // Dispara l'event
+        event(new VideoCreated($video));
 
         return redirect()->route('videos.index')->with('success', 'Video created successfully.');
     }
