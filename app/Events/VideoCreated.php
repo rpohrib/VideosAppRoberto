@@ -20,20 +20,33 @@ class VideoCreated
     /**
      * Crea una nova instància de l'event.
      *
-     * @param \App\Models\Video $video
+     * @param $video
      */
-    public function __construct(Video $video)
+    public function __construct($video)
     {
         $this->video = $video;
     }
 
     /**
-     * Defineix el canal de broadcast.
+     * Get the channels the event should broadcast on.
      *
-     * @return \Illuminate\Broadcasting\Channel|array
+     * @return \Illuminate\Broadcasting\Channel|\Illuminate\Broadcasting\Channel[]
      */
     public function broadcastOn()
     {
-        return new Channel('videos');
+        return new PrivateChannel('videos');
     }
+
+    /**
+     * Get the event's broadcast name.
+     *
+     * @return string
+     */
+    public function broadcastAs()
+    {
+        return 'video.created';
+    }
+
+
+
 }

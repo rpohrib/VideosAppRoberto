@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class VideoCreatedNotification extends Notification
+class VideoCreatedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -31,7 +31,7 @@ class VideoCreatedNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['mail', 'broadcast', 'database'];
     }
 
     /**
@@ -47,7 +47,7 @@ class VideoCreatedNotification extends Notification
             ->line('A new video has been created:')
             ->line('Title: ' . $this->video->title)
             ->line('Description: ' . $this->video->description)
-            ->action('View Video', url('/videos/' . $this->video->id))
+            ->action('View Video', $this->video->url)
             ->line('Thank you for using our application!');
     }
 
@@ -60,6 +60,13 @@ class VideoCreatedNotification extends Notification
     {
         return [
             //
+        ];
+    }
+
+    public function toBroadcast($notifiable)
+    {
+        return [
+            'message' => 'A new video has been created!',
         ];
     }
 }

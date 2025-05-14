@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Events\VideoCreated;
 use App\Models\Video;
+use App\Notifications\VideoCreatedNotification;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 
 class VideosController extends Controller
 {
@@ -32,7 +34,8 @@ class VideosController extends Controller
 
     public function create()
     {
-        return view('videos.create');
+        $series = \App\Models\Series::all(); // Obté totes les sèries
+        return view('videos.create', compact('series'));
     }
 
     public function store(Request $request)
@@ -41,16 +44,23 @@ class VideosController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'url' => 'required|string|url',
+            'series_id' => 'required|exists:series,id', // Valida que la sèrie existeixi
+
         ]);
 
-        $video = Video::create([
+        $video = \App\Models\Video::create([
             'title' => $request->input('title'),
             'description' => $request->input('description'),
             'url' => $request->input('url'),
+            'series_id' => $request->input('series_id'), // Assigna la sèrie
+            'user_id' => auth()->id(), // Assigna l'usuari autenticat
+
         ]);
 
         // Dispara l'event
         event(new VideoCreated($video));
+//        // Envia la notificació
+//        Notification::send($video->user, new VideoCreatedNotification($video));
 
         return redirect()->route('videos.index')->with('success', 'Video created successfully.');
     }

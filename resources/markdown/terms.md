@@ -24,3 +24,6 @@ En el 5e Sprint hem creat la part de les categories, en aquest apartat hem creat
 
 ### Explicació 6è Sprint
 En el 6e Sprint hem creat la part de les tags, en aquest apartat hem creat el crud per crear, editar, eliminar i veure els tags. Hem creat la part de backend, frontend i els testos. I per ultim hem creat la part de les rutes i els testos. Tot aixo en una nova seccio de series que esta relacionada amb els videos.
+
+### Explicació 7è Sprint
+En el 7e sprint hem fet la part de les notificacions i a l'hora de crear una un videos ens envie un correu amb les dades i la notificacio personalitzada

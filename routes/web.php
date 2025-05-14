@@ -5,6 +5,8 @@ use App\Http\Controllers\usersController;
 use App\Http\Controllers\usersManageController;
 use App\Http\Controllers\VideosController;
 use App\Http\Controllers\VideosManageController;
+use App\Models\Notification;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/videos/{id}', [VideosController::class, 'show'])->name('videos.show');
@@ -21,7 +23,7 @@ Route::get('/videos', [VideosController::class, 'index'])->name('videos.index');
 //Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified', 'role:Video Manager'])->group(function () {
     Route::get('/videosmanage', [VideosManageController::class, 'index'])->name('manage.index');
     Route::get('/videos/manage/create', [VideosManageController::class, 'create'])->name('manage.create');
-    Route::get('/videoscreate', [VideosManageController::class, 'createFromUsers'])->name('videos.create');
+    Route::get('/videoscreate', [VideosController::class, 'create'])->name('videos.create');
     Route::post('/videos/manage', [VideosManageController::class, 'store'])->name('manage.store');
     Route::get('/videos/manage/{video}/edit', [VideosManageController::class, 'edit'])->name('manage.edit');
     Route::put('/videos/manage/{video}', [VideosManageController::class, 'update'])->name('manage.update');
@@ -60,6 +62,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/series', [SeriesManageController::class, 'index'])->name('series.index'); // Public index
     Route::get('/series/{id}', [SeriesManageController::class, 'show'])->name('series.show'); // Public show
 });
+
+Route::get('/notifications', function () {
+    $notifications = Notification::where('notifiable_id', Auth::id())
+        ->where('notifiable_type', 'App\Models\User')
+        ->get();
+
+    return view('notifications', compact('notifications'));
+})->name('notifications.index')->middleware('auth');
 
 Route::get('/', function () {
     return view('welcome');
