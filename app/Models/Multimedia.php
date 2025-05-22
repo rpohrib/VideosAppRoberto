@@ -2,16 +2,24 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Multimedia extends Model
 {
-    // Specify the table name if it doesn't follow Laravel's naming convention
-    protected $table = 'multimedia';
+    use HasFactory;
 
-    // Define the fillable attributes for mass assignment
     protected $fillable = [
-        'type',
+        'type', // 'video' or 'photo'
         'path',
+        'user_id',
     ];
+
+    /**
+     * Get the user that owns the multimedia file.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

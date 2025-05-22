@@ -3,104 +3,82 @@
 namespace App\Http\Controllers;
 
 use App\Models\Multimedia;
+use App\Models\Video;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class ApiMultimediaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function getVideos()
     {
-        // Retrieve all multimedia records
-        $multimedia = Multimedia::all();
-        return response()->json($multimedia);
+        $files = Storage::disk('public')->files('videos');
+        $videos = array_map(function ($file) {
+            return [
+                'url' => '/storage/' .$file,
+                'name' => basename($file)
+            ];
+        }, $files);
+
+        return response()->json($videos);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function login(Request $request)
     {
-        // Validate the request
-        $request->validate([
-            'file' => 'required|file|mimes:jpeg,png,mp4,mov|max:10240', // Max 10MB
-            'type' => 'required|in:photo,video',
-        ]);
+        $credentials = $request->only('email', 'password');
 
-        // Store the file
-        $file = $request->file('file');
-        $path = $file->store('multimedia', 'public');
-
-        // Create a new multimedia record
-        $multimedia = Multimedia::create([
-            'type' => $request->input('type'),
-            'path' => $path,
-        ]);
-
-        return response()->json($multimedia, 201);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        // Find the multimedia record by ID
-        $multimedia = Multimedia::findOrFail($id);
-        return response()->json($multimedia);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        // Validate the request
-        $request->validate([
-            'file' => 'nullable|file|mimes:jpeg,png,mp4,mov|max:10240', // Max 10MB
-            'type' => 'nullable|in:photo,video',
-        ]);
-
-        // Find the multimedia record
-        $multimedia = Multimedia::findOrFail($id);
-
-        // Update the file if provided
-        if ($request->hasFile('file')) {
-            // Delete the old file
-            Storage::disk('public')->delete($multimedia->path);
-
-            // Store the new file
-            $file = $request->file('file');
-            $path = $file->store('multimedia', 'public');
-            $multimedia->path = $path;
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+            $token = $user->createToken('authToken')->plainTextToken;
+            return response()->json(['token' => $token], 200);
         }
 
-        // Update the type if provided
-        if ($request->has('type')) {
-            $multimedia->type = $request->input('type');
-        }
+        return response()->json(['message' => 'Unauthorized'], 401);
+    }
 
-        $multimedia->save();
+    public function deleteVideo(Request $request)
+    {
+        $request->validate([
+            'video' => 'required|string',
+        ]);
 
-        return response()->json($multimedia);
+        $video = $request->video;
+        Storage::disk('public')->delete('videos/' . $video);
+
+        return response()->json(['message' => 'Video deleted successfully'], 200);
+    }
+
+
+    /**
+     * Store a newly uploaded video.
+     */
+    public function storeVideo(Request $request)
+    {
+        $request->validate([
+            'video' => 'required|file|mimes:mp4,mov,avi,wmv|max:20480', // Max size 20MB
+        ]);
+
+        $path = $request->file('video')->store('videos', 'public');
+
+        Multimedia::create([
+            'type' => 'video',
+            'path' => $path
+        ]);
+
+        return response()->json(['message' => 'Video uploaded successfully', 'path' => $path], 201);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Store a newly uploaded photo.
      */
-    public function destroy(string $id)
+    public function storePhoto(Request $request)
     {
-        // Find the multimedia record
-        $multimedia = Multimedia::findOrFail($id);
+        $request->validate([
+            'photo' => 'required|file|mimes:jpeg,png,jpg,gif|max:5120', // Max size 5MB
+        ]);
 
-        // Delete the file from storage
-        Storage::disk('public')->delete($multimedia->path);
+        $path = $request->file('photo')->store('photos', 'public');
 
-        // Delete the record
-        $multimedia->delete();
-
-        return response()->json(['message' => 'Multimedia deleted successfully.']);
+        return response()->json(['message' => 'Photo uploaded successfully', 'path' => $path], 201);
     }
 }
